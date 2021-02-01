@@ -1,0 +1,24 @@
+version: "3.8"
+
+services:
+  app:
+    depends_on:
+            - mssql
+    image: mcr.microsoft.com/dotnet/sdk:3.1
+    working_dir: /app
+    command: sh -c "dotnet publish -c Release -o out && dotnet out/FileProcessor.App.dll"
+    volumes:
+      - ./:/app
+      - ./in:/app/in
+    environment:
+      SQL_HOST: mssql
+      SQL_USER: sa
+      SQL_PASSWORD: Bunnings@01
+      
+  mssql:
+    image: mcr.microsoft.com/mssql/server:2017-latest-ubuntu 
+    environment:
+      ACCEPT_EULA: 'Y'
+      SA_PASSWORD: Bunnings@01
+    volumes:
+      - ./mssql-data:/var/opt/mssql/data
